@@ -205,4 +205,81 @@ describe('podcast module', () => {
       expect(index).to.equal(0)
     })
   })
+
+  describe('getEpisodeInfo', () => {
+    const cache = [
+      {
+        published_at: '2018-09-20T07:00:00.000Z',
+        title: '#010 episode 10',
+        url: 'https://feed.example.com/episodes/ep_010.mp3'
+      },
+      {
+        published_at: '2018-09-15T07:00:00.000Z',
+        title: '#009 episode 9',
+        url: 'https://feed.example.com/episodes/ep_009.mp3'
+      }
+    ]
+    // eslint-disable-next-line no-unused-vars
+    const restoreFromCache = podcast.__set__('restoreFromCache', async () => cache)
+
+    context('podcast id が未設定の場合', () => {
+      it('Errorを投げる')
+    })
+
+    it('戻り値の型がPromiseである', () => {
+      expect(podcast.getEpisodeInfo('podcast id', 1)).to.be.a('Promise')
+    })
+
+    context('forceUseCache が true の場合', () => {
+      // it('restoreFromCache を呼び出しキャッシュを読み込む')
+      context('キャッシュが存在する場合', () => {
+        it('キャッシュの内容を返す', async () => {
+          const episodeInfo = await podcast.getEpisodeInfo('hoge', 0, true)
+          expect(episodeInfo).to.deep.include({
+            title: '#010 episode 10',
+            url: 'https://feed.example.com/episodes/ep_010.mp3'
+          })
+        })
+      })
+      context('キャッシュが存在しない場合', () => {
+        it('podcastのフィードを取得する')
+        context('フィード取得でエラーの場合', () => {
+          it('reject でエラー情報を返却する')
+        })
+        context('フィード取得に成功した場合', () => {
+          context('読み込みの上限に達していない場合', () => {
+            it('resolve でエピソードの一覧を返却')
+          })
+        })
+      })
+    })
+    context('forceUseCache が false の場合', () => {
+      // it('restoreFromCache を呼び出しキャッシュを読み込む')
+      context('キャッシュが存在する場合', () => {
+        context('etagの値が変化している場合', () => {
+          it('podcastのフィードを取得する')
+          context('フィード取得でエラーの場合', () => {
+            it('reject でエラー情報を返却する')
+          })
+          context('フィード取得に成功した場合', () => {
+            context('読み込みの上限に達していない場合', () => {
+              it('resolve でエピソードの一覧を返却')
+            })
+          })
+        })
+        it('キャッシュの内容を返す')
+      })
+      context('キャッシュが存在しない場合', () => {
+        it('podcastのフィードを取得する')
+        context('フィード取得でエラーの場合', () => {
+          it('reject でエラー情報を返却する')
+        })
+        context('フィード取得に成功した場合', () => {
+          context('読み込みの上限に達していない場合', () => {
+            it('resolve でエピソードの一覧を返却')
+          })
+        })
+      })
+    })
+  })
 })
